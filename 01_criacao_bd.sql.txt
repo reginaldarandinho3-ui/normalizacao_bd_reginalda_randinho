@@ -1,0 +1,69 @@
+-- Criação da Base de Dados
+CREATE DATABASE IF NOT EXISTS sistema_funcionarios CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE sistema_funcionarios;
+
+-- Tabela de Cargos
+CREATE TABLE cargo (
+    cod_cargo VARCHAR(10) PRIMARY KEY,
+    nome_cargo VARCHAR(100) NOT NULL
+);
+
+-- Tabela de Funções
+CREATE TABLE funcao (
+    cod_funcao VARCHAR(10) PRIMARY KEY,
+    nome_funcao VARCHAR(100) NOT NULL
+);
+
+-- Tabela de Localidades
+CREATE TABLE localidade (
+    id_localidade INT PRIMARY KEY,
+    cidade VARCHAR(100) NOT NULL,
+    provincia VARCHAR(100) NOT NULL,
+    pais VARCHAR(100) NOT NULL
+);
+
+-- Tabela de Postos de Trabalho
+CREATE TABLE posto_trabalho (
+    id_posto INT PRIMARY KEY,
+    nome_posto VARCHAR(100) NOT NULL,
+    id_localidade INT NOT NULL,
+    FOREIGN KEY (id_localidade) REFERENCES localidade(id_localidade)
+);
+
+-- Tabela Principal de Funcionários
+CREATE TABLE funcionario (
+    id_funcionario INT PRIMARY KEY,
+    nuit VARCHAR(20) UNIQUE NOT NULL,
+    nome_completo VARCHAR(150) NOT NULL,
+    data_nascimento DATE NOT NULL,
+    bi VARCHAR(30) UNIQUE NOT NULL,
+    email VARCHAR(150) NOT NULL,
+    rua_avenida VARCHAR(150),
+    numero VARCHAR(20),
+    bairro VARCHAR(100),
+    id_localidade INT NOT NULL,
+    cod_cargo VARCHAR(10) NOT NULL,
+    cod_funcao VARCHAR(10) NOT NULL,
+    id_posto INT NOT NULL,
+    data_admissao DATE NOT NULL,
+    FOREIGN KEY (id_localidade) REFERENCES localidade(id_localidade),
+    FOREIGN KEY (cod_cargo) REFERENCES cargo(cod_cargo),
+    FOREIGN KEY (cod_funcao) REFERENCES funcao(cod_funcao),
+    FOREIGN KEY (id_posto) REFERENCES posto_trabalho(id_posto)
+);
+
+-- Tabela para Telefones Múltiplos (1 para N)
+CREATE TABLE telefone_funcionario (
+    id_funcionario INT,
+    numero_telefone VARCHAR(20) NOT NULL,
+    PRIMARY KEY (id_funcionario, numero_telefone),
+    FOREIGN KEY (id_funcionario) REFERENCES funcionario(id_funcionario) ON DELETE CASCADE
+);
+
+-- Tabela para Filhos/Dependentes (1 para N)
+CREATE TABLE filho_funcionario (
+    id_funcionario INT,
+    nome_filho VARCHAR(150) NOT NULL,
+    PRIMARY KEY (id_funcionario, nome_filho),
+    FOREIGN KEY (id_funcionario) REFERENCES funcionario(id_funcionario) ON DELETE CASCADE
+);

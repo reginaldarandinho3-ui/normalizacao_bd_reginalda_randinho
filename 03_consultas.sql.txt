@@ -1,0 +1,18 @@
+USE sistema_funcionarios;
+
+-- Consulta 1: Listar funcionários com cargos, postos e localidades
+SELECT f.nuit, f.nome_completo, c.nome_cargo, p.nome_posto, l.cidade, l.provincia 
+FROM funcionario f
+JOIN cargo c ON f.cod_cargo = c.cod_cargo
+JOIN posto_trabalho p ON f.id_posto = p.id_posto
+JOIN localidade l ON f.id_localidade = l.id_localidade;
+
+-- Consulta 2: Listar funcionários e respetivos telefones
+SELECT f.nome_completo, t.numero_telefone 
+FROM funcionario f
+JOIN telefone_funcionario t ON f.id_funcionario = t.id_funcionario;
+
+-- Consulta 3: Listar funcionários e respetivos filhos/dependentes
+SELECT f.nome_completo, d.nome_filho 
+FROM funcionario f
+JOIN filho_funcionario d ON f.id_funcionario = d.id_funcionario;
